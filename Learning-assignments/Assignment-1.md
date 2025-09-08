@@ -205,7 +205,34 @@ npm install
 
 **Explanation:** Create a React + TypeScript app using **Vite** and install dependencies.
 
-### B2) Configure dev proxy to backend
+### B2) Add Tailwind CSS
+
+```bash
+npm install tailwindcss @tailwindcss/vite
+```
+
+Add the `@tailwindcss/vite` plugin to your Vite configuration inside `vite.config.ts`.
+
+```ts
+import { defineConfig } from 'vite';
+import react from "@vitejs/plugin-react";
+import tailwindcss from '@tailwindcss/vite';
+
+export default defineConfig({
+  plugins: [
+    react(),
+    tailwindcss(),
+  ],
+})
+```
+
+Add an `@import` to your CSS file that imports Tailwind CSS, e.g. `index.css`
+
+```css
+@import "tailwindcss";
+```
+
+### B3) Configure dev proxy to backend
 
 **vite.config.ts**
 
@@ -214,7 +241,10 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react(),
+    tailwindcss(),
+  ],
   server: {
     port: 5173,
     proxy: {
@@ -226,11 +256,121 @@ export default defineConfig({
 
 **Explanation:** Forward `/api` requests from the dev server to the backend so we avoid CORS in development.
 
-### B3) Minimal API client and UI
+### B4) Minimal API client and UI
 
-(Add example code )
+Create **`src/api/greenhouse.ts`**:
 
-### B4) Run the frontend
+```ts
+export type Reading = {
+  id: string
+  deviceId: string
+  sensorType: string
+  value: number
+  unit: string
+  timestamp: string
+}
+
+export async function fetchReadings(params?: { deviceId?: string; sensorType?: string }) {
+  const q = new URLSearchParams(params as Record<string, string>).toString()
+  const res = await fetch(`/api/readings${q ? `?${q}` : ''}`)
+  if (!res.ok) throw new Error(`Failed to load readings: ${res.status}`)
+  return res.json() as Promise<Reading[]>
+}
+```
+
+**What this does:** provides a typed function to call your backend’s `/api/readings`.
+
+
+---
+
+
+### B6) Minimal UI components
+
+
+Create **`src/components/SensorCard.tsx`**:
+
+```tsx
+type Props = { title: string; value?: number; unit?: string }
+
+export function SensorCard({ title, value, unit }: Props) {
+  return (
+    <div className="rounded-2xl p-4 shadow-md bg-white">
+      <div className="font-semibold text-gray-700">{title}</div>
+      <div className="mt-2 text-3xl font-bold text-gray-900">
+        {value ?? '—'} <span className="text-sm text-gray-500">{unit}</span>
+      </div>
+    </div>
+  )
+}
+```
+
+Create **`src/pages/Dashboard.tsx`**:
+
+```tsx
+import { useEffect, useMemo, useState } from 'react'
+import { fetchReadings, Reading } from '@/api/greenhouse'
+import { SensorCard } from '@/components/SensorCard'
+
+export default function Dashboard() {
+  const [readings, setReadings] = useState<Reading[]>([])
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    fetchReadings().then(setReadings).catch(e => setError(String(e)))
+  }, [])
+
+  const latestByType = useMemo(() => {
+    const map = new Map<string, Reading>()
+    for (const r of readings) {
+      const prev = map.get(r.sensorType)
+      if (!prev || prev.timestamp < r.timestamp) map.set(r.sensorType, r)
+    }
+    return map
+  }, [readings])
+
+  return (
+    <div className="p-6 grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+      {error && <div className="text-red-600">{error}</div>}
+      <SensorCard title="Temperature"    value={latestByType.get('temp')?.value}         unit={latestByType.get('temp')?.unit} />
+      <SensorCard title="Humidity"       value={latestByType.get('humidity')?.value}     unit={latestByType.get('humidity')?.unit} />
+      <SensorCard title="Light"          value={latestByType.get('light')?.value}        unit={latestByType.get('light')?.unit} />
+      <SensorCard title="Soil Moisture"  value={latestByType.get('soilMoisture')?.value} unit={latestByType.get('soilMoisture')?.unit} />
+    </div>
+  )
+}
+```
+
+Update **`src/App.tsx`**:
+
+```tsx
+import Dashboard from '@/pages/Dashboard'
+export default function App() { return <Dashboard /> }
+```
+
+Update **`src/main.tsx`**:
+
+```tsx
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import App from './App'
+import './styles/globals.css'   // <-- import Tailwind layers, replace with correct css file
+
+ReactDOM.createRoot(document.getElementById('root')!).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+)
+```
+
+Make sure **`index.html`** has a root div (Vite creates this by default):
+
+```html
+<div id="root"></div>
+```
+
+---
+
+### B7) Run the frontend
 
 ```bash
 npm run dev
@@ -238,7 +378,9 @@ npm run dev
 
 **Explanation:** Start Vite dev server at **[http://localhost:5173](http://localhost:5173/)**. It proxies `/api` to the backend.
 
-### B5) Verify end-to-end
+---
+
+### B8) Verify end-to-end
 
 - Visit **[http://localhost:5080/swagger](http://localhost:5080/swagger)** and call `GET /api/readings` — you should see data.
     
@@ -246,6 +388,39 @@ npm run dev
     
 - Add another reading via Swagger or `curl`, then refresh the frontend to confirm it updates.
     
+---
+
+### B9) Quick end-to-end test
+
+With your backend running:
+
+```bash
+curl -X POST http://localhost:5080/api/readings 
+  -H "Content-Type: application/json" 
+  -d '{
+    "deviceId":"demo-01",
+    "sensorType":"temp",
+    "value":24.2,
+    "unit":"°C",
+    "timestamp":"2025-09-08T09:00:00Z"
+  }'
+```
+
+or alternatively you can use Postman to perform the API call
+
+ - Type: `POST`
+ - Url: `http://localhost:5080/api/readings `
+ - Add new key value to headers: `Content-Type: application/json`
+ - Body: `{
+    "deviceId":"demo-01",
+    "sensorType":"temp",
+    "value":24.2,
+    "unit":"°C",
+    "timestamp":"2025-09-08T09:00:00Z"
+  }`
+
+
+Refresh the frontend — the **Temperature** card should show the new value.
 
 ---
 
