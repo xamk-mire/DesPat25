@@ -276,6 +276,9 @@ await app.RunAsync();
 
 **`backend/src/SmartGreenhouse.Api/appsettings.json`**
 
+>[!NOTE]
+>Update the ConnectionStrings "Default" Username and Password to use your PostgreSQL credentials
+
 ```json
 {
   "ConnectionStrings": {
