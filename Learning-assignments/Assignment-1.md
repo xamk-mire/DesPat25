@@ -29,49 +29,49 @@ Set up a minimal IoT-style web app consisting of a **backend API (ASP.NET Core +
 mkdir -p backend/src && cd backend
 ```
 
-**Explanation:** Create a `backend/` folder with a `src/` subfolder and switch into `backend`.
+ - **Explanation:** Create a `backend/` folder with a `src/` subfolder and switch into `backend`.
 
 ```bash
 dotnet new sln -n SmartGreenhouse
 ```
 
-**Explanation:** Create a new **solution** file (`SmartGreenhouse.sln`) to contain multiple .NET projects.
+ - **Explanation:** Create a new **solution** file (`SmartGreenhouse.sln`) to contain multiple .NET projects.
 
 ```bash
 cd src
 ```
 
-**Explanation:** Move into the source folder where we’ll place project directories.
+ - **Explanation:** Move into the source folder where we’ll place project directories.
 
 ```bash
 dotnet new classlib -n SmartGreenhouse.Domain -f net8.0 && mkdir -p SmartGreenhouse.Domain/Entities
 ```
 
-**Explanation:** Create a **class library** for **domain models** (pure C#). Then make an `Entities/` folder for entity classes.
+ - **Explanation:** Create a **class library** for **domain models** (pure C#). Then make an `Entities/` folder for entity classes.
 
 ```bash
 dotnet new classlib -n SmartGreenhouse.Infrastructure -f net8.0 && mkdir -p SmartGreenhouse.Infrastructure/Data
 ```
 
-**Explanation:** Make a library for **infrastructure** concerns (EF Core DbContext, repositories). Create `Data/` for DB files.
+ - **Explanation:** Make a library for **infrastructure** concerns (EF Core DbContext, repositories). Create `Data/` for DB files.
 
 ```bash
 dotnet new classlib -n SmartGreenhouse.Application -f net8.0 && mkdir -p SmartGreenhouse.Application/Services
 ```
 
-**Explanation:** Create the **application layer** where business/use-case services live. Add `Services/` folder.
+ - **Explanation:** Create the **application layer** where business/use-case services live. Add `Services/` folder.
 
 ```bash
 dotnet new classlib -n SmartGreenhouse.Shared -f net8.0 && mkdir -p SmartGreenhouse.Shared/Contracts
 ```
 
-**Explanation:** Shared types/contracts that may be used by multiple projects.
+ - **Explanation:** Shared types/contracts that may be used by multiple projects.
 
 ```bash
 dotnet new webapi -n SmartGreenhouse.Api -f net8.0 && mkdir -p SmartGreenhouse.Api/Controllers
 ```
 
-**Explanation:** Scaffold the **ASP.NET Core Web API** project and a `Controllers/` folder for HTTP endpoints.
+ - **Explanation:** Scaffold the **ASP.NET Core Web API** project and a `Controllers/` folder for HTTP endpoints.
 
 ---
 
@@ -84,7 +84,7 @@ cd SmartGreenhouse.Infrastructure
 cd ..
 ```
 
-**Explanation:** Install EF Core + the **PostgreSQL provider** into **Infrastructure**.
+ - **Explanation:** Install EF Core + the **PostgreSQL provider** into **Infrastructure**.
 
 ```bash
 cd SmartGreenhouse.Api
@@ -93,7 +93,7 @@ cd SmartGreenhouse.Api
 cd ..
 ```
 
-**Explanation:** Add **Swagger** (OpenAPI UI) and EF **design-time** tools for migrations to the **API** project.
+ - **Explanation:** Add **Swagger** (OpenAPI UI) and EF **design-time** tools for migrations to the **API** project.
 
 ---
 
@@ -105,26 +105,26 @@ cd ..
 dotnet add SmartGreenhouse.Infrastructure/SmartGreenhouse.Infrastructure.csproj reference SmartGreenhouse.Domain/SmartGreenhouse.Domain.csproj
 ```
 
-**Explanation:** Infrastructure depends on Domain entities.
+ - **Explanation:** Infrastructure depends on Domain entities.
 
 ```bash
 dotnet add SmartGreenhouse.Application/SmartGreenhouse.Application.csproj reference SmartGreenhouse.Domain/SmartGreenhouse.Domain.csproj SmartGreenhouse.Infrastructure/SmartGreenhouse.Infrastructure.csproj
 ```
 
-**Explanation:** Application uses Domain models and Infrastructure persistence.
+ - **Explanation:** Application uses Domain models and Infrastructure persistence.
 
 ```bash
 dotnet add SmartGreenhouse.Api/SmartGreenhouse.Api.csproj reference SmartGreenhouse.Domain/SmartGreenhouse.Domain.csproj SmartGreenhouse.Application/SmartGreenhouse.Application.csproj SmartGreenhouse.Infrastructure/SmartGreenhouse.Infrastructure.csproj SmartGreenhouse.Shared/SmartGreenhouse.Shared.csproj
 ```
 
-**Explanation:** API calls Application services, returns Domain data, persists via Infrastructure, and may use Shared contracts.
+ - **Explanation:** API calls Application services, returns Domain data, persists via Infrastructure, and may use Shared contracts.
 
 ```bash
 cd ..
 dotnet sln SmartGreenhouse.sln add src/SmartGreenhouse.Domain/SmartGreenhouse.Domain.csproj src/SmartGreenhouse.Infrastructure/SmartGreenhouse.Infrastructure.csproj src/SmartGreenhouse.Application/SmartGreenhouse.Application.csproj src/SmartGreenhouse.Shared/SmartGreenhouse.Shared.csproj src/SmartGreenhouse.Api/SmartGreenhouse.Api.csproj
 ```
 
-**Explanation:** Register all the projects into the **solution** so `dotnet build` builds everything together.
+ - **Explanation:** Register all the projects into the **solution** so `dotnet build` builds everything together.
 
 ---
 
@@ -383,25 +383,25 @@ Create a new database called `greenhouse`, either with PgAdmin tool or using `ps
 dotnet tool install --global dotnet-ef
 ```
 
-**Explanation:** Install EF **CLI** tooling (one-time per machine).
+ - **Explanation:** Install EF **CLI** tooling (one-time per machine).
 
 ```bash
 cd backend/src
 ```
 
-**Explanation:** Ensure the **project directories** are the working dir (the `-p` and `-s` paths below are resolved from here).
+ - **Explanation:** Ensure the **project directories** are the working dir (the `-p` and `-s` paths below are resolved from here).
 
 ```bash
 dotnet ef migrations add InitialCreate -p SmartGreenhouse.Infrastructure -s SmartGreenhouse.Api -o Data/Migrations
 ```
 
-**Explanation:** Generate a migration in the **Infrastructure** project (`-p`), using the **API** project as the **startup** (`-s`) so it can read `appsettings.json` and DI. Output files into `Data/Migrations`.
+ - **Explanation:** Generate a migration in the **Infrastructure** project (`-p`), using the **API** project as the **startup** (`-s`) so it can read `appsettings.json` and DI. Output files into `Data/Migrations`.
 
 ```bash
 dotnet ef database update -p SmartGreenhouse.Infrastructure -s SmartGreenhouse.Api
 ```
 
-**Explanation:** Apply the migrations to the Postgres database defined by the API's connection string.
+ - **Explanation:** Apply the migrations to the Postgres database defined by the API's connection string.
 
 ---
 
@@ -412,14 +412,14 @@ cd ../..   # back to backend/
 dotnet build
 ```
 
-**Explanation:** Compile all projects in the solution to ensure everything links.
+ - **Explanation:** Compile all projects in the solution to ensure everything links.
 
 ```bash
 cd src/SmartGreenhouse.Api
 ASPNETCORE_URLS=http://localhost:5080 dotnet run
 ```
 
-**Explanation:** Start Kestrel and bind the API to **[http://localhost:5080](http://localhost:5080/)** so the frontend dev proxy can reach it.
+ - **Explanation:** Start Kestrel and bind the API to **[http://localhost:5080](http://localhost:5080/)** so the frontend dev proxy can reach it.
 
 ### A8) Add some data (for UI test)
 
@@ -483,7 +483,7 @@ cd smart-greenhouse-web
 npm install
 ```
 
-**Explanation:** Create a React + TypeScript app using **Vite** and install dependencies.
+ - **Explanation:** Create a React + TypeScript app using **Vite** and install dependencies.
 
 ### B2) Add Tailwind CSS
 
@@ -534,7 +534,7 @@ export default defineConfig({
 });
 ```
 
-**Explanation:** Forward `/api` requests from the dev server to the backend so we avoid CORS in development.
+ - **Explanation:** Forward `/api` requests from the dev server to the backend so we avoid CORS in development.
 
 ### B4) Minimal API client and UI
 
@@ -565,7 +565,7 @@ export async function fetchReadings(params?: { deviceId?: number; sensorType?: s
 }
 ```
 
-**What this does:** provides a typed function to call your backend’s `/api/readings`.
+ - **What this does:** provides a typed function to call your backend’s `/api/readings`.
 
 Create **`src/api/devices.ts`**:
 
@@ -583,7 +583,7 @@ export async function fetchDevices() {
 }
 ```
 
-**What this does:** provides a typed function to call your backend’s `/api/devices`.
+ - **What this does:** provides a typed function to call your backend’s `/api/devices`.
 
 ---
 
@@ -735,7 +735,7 @@ Make sure **`index.html`** has a root div (Vite creates this by default):
 npm run dev
 ```
 
-**Explanation:** Start Vite dev server at **[http://localhost:5173](http://localhost:5173/)**. It proxies `/api` to the backend.
+ - **Explanation:** Start Vite dev server at **[http://localhost:5173](http://localhost:5173/)**. It proxies `/api` to the backend.
 
 ---
 
