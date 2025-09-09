@@ -26,7 +26,8 @@ Set up a minimal IoT-style web app consisting of a **backend API (ASP.NET Core +
 ### A1) Create solution and projects
 
 ```bash
-mkdir -p backend/src && cd backend
+mkdir -p backend/src
+cd backend
 ```
 
  - **Explanation:** Create a `backend/` folder with a `src/` subfolder and switch into `backend`.
@@ -44,31 +45,36 @@ cd src
  - **Explanation:** Move into the source folder where we’ll place project directories.
 
 ```bash
-dotnet new classlib -n SmartGreenhouse.Domain -f net8.0 && mkdir -p SmartGreenhouse.Domain/Entities
+dotnet new classlib -n SmartGreenhouse.Domain -f net8.0
+mkdir -p SmartGreenhouse.Domain/Entities
 ```
 
  - **Explanation:** Create a **class library** for **domain models** (pure C#). Then make an `Entities/` folder for entity classes.
 
 ```bash
-dotnet new classlib -n SmartGreenhouse.Infrastructure -f net8.0 && mkdir -p SmartGreenhouse.Infrastructure/Data
+dotnet new classlib -n SmartGreenhouse.Infrastructure -f net8.0
+mkdir -p SmartGreenhouse.Infrastructure/Data
 ```
 
  - **Explanation:** Make a library for **infrastructure** concerns (EF Core DbContext, repositories). Create `Data/` for DB files.
 
 ```bash
-dotnet new classlib -n SmartGreenhouse.Application -f net8.0 && mkdir -p SmartGreenhouse.Application/Services
+dotnet new classlib -n SmartGreenhouse.Application -f net8.0
+mkdir -p SmartGreenhouse.Application/Services
 ```
 
  - **Explanation:** Create the **application layer** where business/use-case services live. Add `Services/` folder.
 
 ```bash
-dotnet new classlib -n SmartGreenhouse.Shared -f net8.0 && mkdir -p SmartGreenhouse.Shared/Contracts
+dotnet new classlib -n SmartGreenhouse.Shared -f net8.0
+mkdir -p SmartGreenhouse.Shared/Contracts
 ```
 
  - **Explanation:** Shared types/contracts that may be used by multiple projects.
 
 ```bash
-dotnet new webapi -n SmartGreenhouse.Api -f net8.0 && mkdir -p SmartGreenhouse.Api/Controllers
+dotnet new webapi -n SmartGreenhouse.Api -f net8.0
+mkdir -p SmartGreenhouse.Api/Controllers
 ```
 
  - **Explanation:** Scaffold the **ASP.NET Core Web API** project and a `Controllers/` folder for HTTP endpoints.
@@ -477,7 +483,8 @@ or alternatively you can use the Swagger to perform the necessary calls
 > If prompted to select framework choose React and for variant select TypeScript
 
 ```bash
-mkdir -p frontend && cd frontend
+mkdir -p frontend
+cd frontend
 npm create vite@latest smart-greenhouse-web -- --template react-ts
 cd smart-greenhouse-web
 npm install
