@@ -415,7 +415,7 @@ dotnet ef database update -p SmartGreenhouse.Infrastructure -s SmartGreenhouse.A
 
 Update the `launchSettings.json` in the `SmartGreenhouse.Api/Properties` folder
 
-```csharp
+```json
 {
   "$schema": "http://json.schemastore.org/launchsettings.json",
   "profiles": {
@@ -430,10 +430,8 @@ Update the `launchSettings.json` in the `SmartGreenhouse.Api/Properties` folder
     }
   }
 }
-
- - Explanation: With the `applicationUrl` config, we force the application to launch in the correct port 5080.
-
 ```
+ - Explanation: With the `applicationUrl` config, we force the application to launch in the correct port 5080.
 
 ```bash
 cd ../..   # back to backend/
@@ -448,6 +446,8 @@ dotnet run
 ```
 
  - **Explanation:** Start Kestrel and bind the API to **[http://localhost:5080](http://localhost:5080/)** so the frontend dev proxy can reach it.
+
+- Visit **[http://localhost:5080/swagger](http://localhost:5080/swagger)** and call `GET /api/readings` — you should see data.
 
 ### A8) Add some data (for UI test)
 
