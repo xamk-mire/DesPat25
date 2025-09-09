@@ -416,7 +416,7 @@ dotnet build
 
 ```bash
 cd src/SmartGreenhouse.Api
-ASPNETCORE_URLS=http://localhost:5080 dotnet run
+dotnet run
 ```
 
  - **Explanation:** Start Kestrel and bind the API to **[http://localhost:5080](http://localhost:5080/)** so the frontend dev proxy can reach it.
