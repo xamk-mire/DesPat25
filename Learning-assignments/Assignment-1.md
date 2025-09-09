@@ -641,9 +641,9 @@ Create **`src/pages/Dashboard.tsx`**:
 
 ```tsx
 import { useEffect, useMemo, useState } from 'react'
-import { fetchReadings, Reading } from '@/api/greenhouse'
-import { fetchDevices, Device } from '@/api/devices'
-import { SensorCard } from '@/components/SensorCard'
+import { fetchReadings, Reading } from '../api/greenhouse'
+import { fetchDevices, Device } from '../api/devices'
+import { SensorCard } from '../components/SensorCard'
 
 export default function Dashboard() {
   const [devices, setDevices] = useState<Device[]>([])
