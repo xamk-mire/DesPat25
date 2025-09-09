@@ -413,6 +413,28 @@ dotnet ef database update -p SmartGreenhouse.Infrastructure -s SmartGreenhouse.A
 
 ### A7) Build & run API on port 5080
 
+Update the `launchSettings.json` in the `SmartGreenhouse.Api/Properties` folder
+
+```csharp
+{
+  "$schema": "http://json.schemastore.org/launchsettings.json",
+  "profiles": {
+    "SmartGreenhouse.Api": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": true,
+      "applicationUrl": "http://localhost:5080",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}
+
+ - Explanation: With the `applicationUrl` config, we force the application to launch in the correct port 5080.
+
+```
+
 ```bash
 cd ../..   # back to backend/
 dotnet build
