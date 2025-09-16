@@ -66,22 +66,31 @@ Extend your factory to support dynamic character type registration.
 
 **Requirements:**
 
+
+
+
+
+
+
 1.  Create a `CharacterFactoryRegistry` class that:
-        - Maintains a dictionary of character types to factory instances, example. below
-            - ```csharp
-              private readonly Dictionary<string, CharacterFactory> _factories;
-              ```
-        - Has `RegisterFactory(string type, CharacterFactory factory)` method
-            - Example use in code (creates a HumanFactory under the name "Human")
-        	    - ```csharp
-        	       var registry = new CharacterFactoryRegistry();
-    registry.RegisterFactory("Human", new HumanFactory());
-    ``    - Has `CreateCharacter(string type, string name)` method
-	    - Example use in code (creates new human character called "Boromir")
-	    -``csharp
-    var dynamicHuman = registry.CreateCharacter("Human", "Boromir");
-    ``` - Throws appropriate exceptions for unregistered types
-2.  Demonstrate registering all three factories and creating characters dynamically based on string input.
+	- Maintains a dictionary of character types to factory instances, example. below
+	```csharp
+	private readonly Dictionary<string, CharacterFactory> _factories;
+	```
+	- Has `RegisterFactory(string type, CharacterFactory factory)` method
+		- Example use in code (creates a HumanFactory under the name "Human")
+		 ```csharp
+		 var registry = new CharacterFactoryRegistry();
+		 registry.RegisterFactory("Human", new HumanFactory());
+		 ```
+	- Has `CreateCharacter(string type, string name)` method
+	- Example use in code (creates new human character called "Boromir")
+	```csharp
+	 var dynamicHuman = registry.CreateCharacter("Human", "Boromir");
+	```
+	- Throws appropriate exceptions for unregistered types
+    
+3.  Demonstrate registering all three factories and creating characters dynamically based on string input.
 
 ## Part 2: Abstract Factory Pattern
 
