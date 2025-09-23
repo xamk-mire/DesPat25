@@ -188,7 +188,7 @@ backend/
 
 ---
 
-## Step 3 — EF model & design-time factory (Infrastructure)
+## Step 3 — EF model (Infrastructure)
 
 **Goal:** Ensure EF Core can manage the updated model and support migrations smoothly, while keeping queries efficient.
 
