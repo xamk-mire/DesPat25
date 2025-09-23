@@ -471,7 +471,6 @@ curl -X POST http://localhost:5080/api/readings
     "sensorType":"temp",
     "value":23.5,
     "unit":"°C",
-    "timestamp":"2025-09-09T11:00:00Z"
   }'
 ```
 
@@ -492,7 +491,6 @@ and
     "sensorType":"temp",
     "value":23.5,
     "unit":"°C",
-    "timestamp":"2025-09-09T11:00:00Z"
   }`
 
 or alternatively you can use the Swagger to perform the necessary calls
