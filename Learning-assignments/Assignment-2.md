@@ -743,6 +743,10 @@ dotnet ef database update -p SmartGreenhouse.Infrastructure -s SmartGreenhouse.A
 1. Run both frontend and backend
 2. Use the swagger UI to create a device and capture a reading: `[Swagger UI](http://localhost:5080/swagger/index.html)`
 
+>[!NOTE]
+> If the values don't show in the frontend, you might need to update the code in the dashboard to target the new enumerable string values
+> e.g. temp -> Temperature, humidity -> Humidity, light -> Light, moisture -> SoilMoisture
+
 **Create a device (Simulated for now):**
 
 ```bash
