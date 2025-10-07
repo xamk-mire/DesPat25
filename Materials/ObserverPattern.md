@@ -298,7 +298,91 @@ namespace ManualObserverRefactor
 - **Expose Subscribe() → IDisposable** so callers can detach and prevent leaks.
     
 - **Notify via a snapshot** and choose an **error policy** (log & continue is common).
-    
+
 - **Compose at the edges**, not inside the subject—tests and features stay simple.
+---
+
+## Lecture code example
+
+```csharp
+
+namespace ObserverExample
+{
+    // Observer
+    public interface IObserver
+    {
+        void Update(float temperature, float humidity);
+    }
+
+    // Subject
+    public interface ISubject
+    {
+        void AddObserver(IObserver observer);
+        void RemoveObserver(IObserver observer);
+        void NotifyObservers();
+    }
+
+    // Concrete Subject
+    public class WeatherStation : ISubject
+    {
+        private readonly List<IObserver> _observers = new();
+        private float _temperature;
+        private float _humidity;
+
+        public void SetMeasurements(float temperature, float humidity)
+        {
+            _temperature = temperature;
+            _humidity = humidity;
+            NotifyObservers();
+        }
+
+        public void AddObserver(IObserver observer) => _observers.Add(observer);
+
+        public void RemoveObserver(IObserver observer) => _observers.Remove(observer);
+
+        public void NotifyObservers()
+        {
+            foreach (var obs in _observers)
+                obs.Update(_temperature, _humidity);
+        }
+    }
+
+    // Concrete Observer
+    public class PhoneAppDisplay : IObserver
+    {
+        private readonly string _name;
+        public PhoneAppDisplay(string name) => _name = name;
+
+        public void Update(float temperature, float humidity)
+        {
+            Console.WriteLine($"{_name} -> Temp: {temperature}°C, Humidity: {humidity}%");
+        }
+    }
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            var station = new WeatherStation();
+            var phone = new PhoneAppDisplay("Phone");
+            var watch = new PhoneAppDisplay("Watch");
+
+            station.AddObserver(phone);
+            station.AddObserver(watch);
+
+            station.SetMeasurements(22.5f, 55f);
+            station.SetMeasurements(25.0f, 50f);
+
+            // Remove watch
+            station.RemoveObserver(watch);
+
+            // Only phone should be updated
+            station.SetMeasurements(19.2f, 60f);
+        }
+    }
+}
+```
+    
+
     
 
