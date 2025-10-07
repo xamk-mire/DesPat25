@@ -284,3 +284,76 @@ namespace StrategyPattern
 * Adding a new algorithm **doesn’t edit existing classes** (Open/Closed).
 * Testing becomes **trivial**: plug in a fake `IShippingStrategy` and assert interactions.
 
+---
+
+## Lecture code example
+
+```csharp
+// Strategy interface
+public interface IRouteStrategy
+{
+    void BuildRoute(string start, string end);
+}
+
+// Concrete strategies
+public class CarRoute : IRouteStrategy
+{
+    public void BuildRoute(string start, string end)
+    {
+        Console.WriteLine($"Calculating fastest car route from {start} to {end}.");
+    }
+}
+
+public class BikeRoute : IRouteStrategy
+{
+    public void BuildRoute(string start, string end)
+    {
+        Console.WriteLine($"Finding safest bike path from {start} to {end}.");
+    }
+}
+
+public class WalkRoute : IRouteStrategy
+{
+    public void BuildRoute(string start, string end)
+    {
+        Console.WriteLine($"Creating shortest walking path from {start} to {end}.");
+    }
+}
+
+public class NavigationApp
+{
+    private IRouteStrategy _strategy;
+
+    public NavigationApp(IRouteStrategy strategy)
+    {
+        _strategy = strategy;
+    }
+
+    public void SetStrategy(IRouteStrategy strategy)
+    {
+        _strategy = strategy;
+    }
+
+    public void Navigate(string start, string end)
+    {
+        _strategy.BuildRoute(start, end);
+    }
+}
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        NavigationApp app = new NavigationApp(new CarRoute());
+        
+        // In real app you would use coordinates instead
+        app.Navigate("Home", "University");
+
+        app.SetStrategy(new BikeRoute());
+        app.Navigate("Home", "University");
+
+        app.SetStrategy(new WalkRoute());
+        app.Navigate("Home", "University");
+    }
+}
+```
