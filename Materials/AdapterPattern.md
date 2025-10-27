@@ -153,8 +153,8 @@ public class SerialEsp32Adapter : IMcuChannel
     {
         var line = _driver.ReadLine();
         var parts = line.Split(';');
-        double t = double.Parse(parts[1].Split('=')[1]);
-        double h = double.Parse(parts[2].Split('=')[1]);
+        double t = double.Parse(parts[1].Split('=')[1], CultureInfo.InvariantCulture);
+        double h = double.Parse(parts[2].Split('=')[1], CultureInfo.InvariantCulture);
         return new Telemetry(t, h, DateTime.UtcNow);
     }
 }
