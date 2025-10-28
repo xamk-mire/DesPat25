@@ -40,8 +40,6 @@ Behavior examples:
     
 - **FastForwarding** or **Rewinding** modifies `PlaybackSpeed` and changes how `Seek(delta)` applies (e.g., ticks forward/back).
     
-- Optional **Buffering**: when `Play()` finds not enough data, transition to **Buffering** until `OnBufferReady()`.
-    
 
 ---
 
