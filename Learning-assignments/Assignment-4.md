@@ -327,10 +327,19 @@ Strategy/State produce `ActuatorCommand`s and messages in a **domain shape**. Ad
 **Program.cs additions (sketch):**
 
 ```csharp
+// HTTP clients for adapters
+builder.Services.AddHttpClient();
+builder.Services.AddHttpClient<HttpActuatorAdapter>(client =>
+{
+    // Default external IoT hub or device controller URL (example)
+    client.BaseAddress = new Uri("http://localhost:5055/");
+});
+builder.Services.AddHttpClient("WebhookClient");
+
 // Adapters
 builder.Services.AddSingleton<INotificationAdapter, ConsoleNotificationAdapter>();
 builder.Services.AddSingleton<IActuatorAdapter, SimulatedActuatorAdapter>();
-// You may register others and switch at runtime via a small registry.
+builder.Services.AddSingleton<AdapterRegistry>();
 
 // State engine & service
 builder.Services.AddScoped<GreenhouseStateEngine>();
@@ -354,13 +363,13 @@ builder.Services.AddScoped<AlarmState>();
 Commands:
 
 ```bash
-dotnet ef migrations add A4_DeviceStateSnapshots \
-  -p SmartGreenhouse.Infrastructure \
-  -s SmartGreenhouse.Api \
+dotnet ef migrations add A4_DeviceStateSnapshots 
+  -p SmartGreenhouse.Infrastructure 
+  -s SmartGreenhouse.Api 
   -o Data/Migrations
 
-dotnet ef database update \
-  -p SmartGreenhouse.Infrastructure \
+dotnet ef database update 
+  -p SmartGreenhouse.Infrastructure 
   -s SmartGreenhouse.Api
 ```
 
