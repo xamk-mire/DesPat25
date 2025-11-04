@@ -34,7 +34,7 @@ IoT systems often need to support different hardware devices and communication m
     
 - HTTP-based device control (cloud services or API-driven IoT devices)
     
-- MQTT-based device control (real microcontrollers like ESP32, Raspberry Pi)
+- (later) MQTT-based device control (real microcontrollers like ESP32, Raspberry Pi)
     
 
 The Adapter pattern ensures your core logic stays stable while your system becomes **hardware-agnostic and easily extendable**.
