@@ -413,13 +413,13 @@ How to evolve your EF Core model while maintaining data integrity.
 **Commands:**
 
 ```bash
-dotnet ef migrations add A3_AlertsAndControl \
-  -p SmartGreenhouse.Infrastructure \
-  -s SmartGreenhouse.Api \
+dotnet ef migrations add A3_AlertsAndControl 
+  -p SmartGreenhouse.Infrastructure 
+  -s SmartGreenhouse.Api 
   -o Data/Migrations
 
-dotnet ef database update \
-  -p SmartGreenhouse.Infrastructure \
+dotnet ef database update 
+  -p SmartGreenhouse.Infrastructure 
   -s SmartGreenhouse.Api
 ```
 
