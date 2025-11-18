@@ -274,6 +274,65 @@ dotnet add package Microsoft.Extensions.Http
     - `ConsoleNotificationAdapter` — log to console.
         
     - `WebhookNotificationAdapter` — POST JSON to configured webhook URL.
+ 
+**AdapterRegistry**
+
+Below is an example solution for the `AdapterRegistry`
+
+```chsarp
+using System.Net.Http;
+using SmartGreenhouse.Application.Abstractions;
+using SmartGreenhouse.Application.Adapters.Actuators;
+using SmartGreenhouse.Application.Adapters.Notifications;
+
+namespace SmartGreenhouse.Application.Adapters;
+
+public class AdapterRegistry
+{
+    private readonly SimulatedActuatorAdapter _simAct;
+    private readonly HttpActuatorAdapter _httpAct;
+    private readonly ConsoleNotificationAdapter _consoleNotify;
+    private readonly IHttpClientFactory _httpFactory;
+
+    private string _actuatorMode = "Simulated";
+    private string _notificationMode = "Console";
+    private string? _webhookUrl;
+
+    public AdapterRegistry(
+        SimulatedActuatorAdapter simAct,
+        HttpActuatorAdapter httpAct,
+        ConsoleNotificationAdapter consoleNotify,
+        IHttpClientFactory httpFactory)
+    {
+        _simAct = simAct;
+        _httpAct = httpAct;
+        _consoleNotify = consoleNotify;
+        _httpFactory = httpFactory;
+    }
+
+    public void SetActuatorMode(string mode) => _actuatorMode = mode;
+    public void SetNotificationMode(string mode, string? webhookUrl = null)
+    {
+        _notificationMode = mode;
+        _webhookUrl = webhookUrl;
+    }
+
+    public IActuatorAdapter ResolveActuator()
+        => _actuatorMode switch
+        {
+            "Http" => _httpAct,
+            _ => _simAct
+        };
+
+    public INotificationAdapter ResolveNotifier()
+        => _notificationMode switch
+        {
+            "Webhook" => new WebhookNotificationAdapter(_httpFactory.CreateClient(), _webhookUrl ?? "http://localhost/webhook"),
+            _ => _consoleNotify
+        };
+}
+
+```
         
 
 **Configuration**
