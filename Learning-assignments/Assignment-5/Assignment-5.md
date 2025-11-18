@@ -305,7 +305,7 @@ The API layer will just implement the notifier over WebSockets.
 
    public class MqttBrokerHostedService : IHostedService
    {
-       private IMqttServer? _server;
+       private MqttServer? _server;
        private readonly IEsp32MessageHandler _handler;
 
        public MqttBrokerHostedService(IEsp32MessageHandler handler)
